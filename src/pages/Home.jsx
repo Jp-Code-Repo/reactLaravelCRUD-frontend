@@ -73,7 +73,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="modal fade" id="deleteModal" tabindex="-1">
+      <div className="modal fade" id="deleteModal" tabIndex="-1">
         <div className="modal-dialog">
             <div className="modal-content">
                 <div className="modal-header bg-danger text-white">
