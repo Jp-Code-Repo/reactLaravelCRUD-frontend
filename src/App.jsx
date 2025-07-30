@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router"
 import Home from "./pages/Home"
 import Createnewpost from "./pages/Createnewpost"
+import Editpost from "./pages/Editpost"
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/create-new-post" element={<Createnewpost />} />
+        <Route path="/edit-post/:id" element={<Editpost />} />
       </Routes>
 
     </>

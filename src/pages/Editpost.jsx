@@ -1,54 +1,76 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router'
+import { Link, useNavigate, useParams } from 'react-router'
 import api from '../api/api'
+import { useEffect } from 'react';
 
-export default function Createnewpost() {
+export default function Editpost() {
 
-  const navigate = useNavigate();
+    const {id} = useParams();
 
-  const [ isSubmitting, setIsSubmitting ] = useState(false);
-  const [ errors, setErrors ] = useState();
+    const navigate = useNavigate();
 
-  const [ formData, setFormData ] = useState({
-    'title' : "",
-    'author' : "",
-    'category' : "",
-    'status' : "",
-    'content' : "",
-  });
+    const [ isSubmitting, setIsSubmitting ] = useState(false);
+    const [ errors, setErrors ] = useState();
+
+    useEffect(() => {
+        getPostById();
+    }, []);
+
+    const getPostById = async () => {
+
+        const response = await api.get(`/post-by-id/${id}`);
+
+        setFormData({
+            title : response.data.title || "",
+            author : response.data.author || "",
+            category : response.data.category || "",
+            status : response.data.status || "",
+            content : response.data.content || "",
+            id : id,
+        });
+
+    };
+
+    const [ formData, setFormData ] = useState({
+        'title' : "",
+        'author' : "",
+        'category' : "",
+        'status' : "",
+        'content' : "",
+    });
 
 
-  const handleChange = (e) =>{
-    const {name, value} = e.target;
-    setFormData( (prev) => ( { ...prev, [name]: value} ) )
-  };
+    const handleChange = (e) =>{
+        const {name, value} = e.target;
+        setFormData( (prev) => ( { ...prev, [name]: value} ) )
+    };
 
-  const handleSubmit = async (e) =>{
-    e.preventDefault();
+    const handleSubmit = async (e) =>{
+        e.preventDefault();
 
-    setIsSubmitting(true);
+        setIsSubmitting(true);
 
-    try {
+        try {
 
-      const response = await api.post('/create-new-post', formData);
-      navigate('/');
+        const response = await api.post('/edit-post', formData);
+        navigate('/');
 
-    } catch (error) {
+        } catch (error) {
 
-      if(error.response.status === 422){
-        setErrors(error.response.data.message);
-      }else{
-        setErrors('Something went wrong');
-      }
-      // console.log(error);
+        if(error.response.status === 422){
+            setErrors(error.response.data.message);
+        }else{
+            setErrors('Something went wrong');
+        }
+        // console.log(error);
 
-    }finally{
-      
-      setIsSubmitting(false);
+        }finally{
+        
+        setIsSubmitting(false);
 
-    }
+        }
 
-    // console.log(formData);
+        // console.log(formData);
   };
 
   return (
@@ -58,11 +80,11 @@ export default function Createnewpost() {
 
         <div className="row mb-4">
           <div className="col-12">
-            <h1 className="display-4">Create New Post</h1>
+            <h1 className="display-4">Update Post</h1>
             <nav aria-label='breadcrumb'>
               <ol className="breadcrumb">
                 <li className="breadcrumb-item"><Link to="/">Home</Link></li>
-                <li className="breadcrumb-item active">Create Post</li>
+                <li className="breadcrumb-item active">Update Post</li>
               </ol>
             </nav>
           </div>
@@ -124,9 +146,9 @@ export default function Createnewpost() {
               <div className="d-grip gap-2 d-md-flex justify-content-md-end">
                 <Link to="/" className="btn btn-secondary me-md-2">Cancel</Link>
                 { isSubmitting ? 
-                  <button type="button" className="btn btn-primary">Saving...</button>
+                  <button type="button" className="btn btn-primary">Updating...</button>
                   :
-                  <button type="submit" className="btn btn-primary">Create Post</button>
+                  <button type="submit" className="btn btn-primary">Update Post</button>
                 }
               </div>
             </form>
@@ -138,5 +160,5 @@ export default function Createnewpost() {
 
     </div>
   )
-}
 
+}
